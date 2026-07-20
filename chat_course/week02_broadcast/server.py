@@ -27,16 +27,19 @@ clients = {} #배열(dictionary)
 clients_lock = threading.Lock()
 
 
-def broadcast(text):
+def broadcast(text, sender_socket=None): #sender_conn 매개변수 추가로 서버가 보낸 사람이 누군지 알게함?
     """접속한 모두에게 같은 문장을 보낸다 (= 중앙 우체국에서 전원에게 배달)."""
+    """과제 1번 : 내 메시지가 화면에 한 번만 보이게 — 보낸 사람을 제외하고 브로드캐스트"""
+    """서버에서 모든 사람에게 브로드캐스트 하고 있음 -> 보낸사람을 제외하고 보내도록 수정"""
     data = text.encode("utf-8")
     with clients_lock:
         targets = list(clients.keys())   # 잠깐 복사해서 안전하게 순회
     for sock in targets:
-        try:
-            sock.sendall(data)
-        except OSError:
-            pass   # 이미 끊긴 소켓은 그냥 건너뛴다
+        if sock != sender_socket:  
+            try:
+                sock.sendall(data)
+            except OSError:
+                pass   # 이미 끊긴 소켓은 그냥 건너뛴다
 
 
 def handle(conn, addr):
