@@ -41,11 +41,6 @@ class Room:
         self.history.append(message)
         self.deliver(message, send)
 
-    def __init__(self, name, capacity=None):
-        ...; self.capacity = capacity
-    def is_full(self):
-        return self.capacity is not None and len(self.members) >= self.capacity
-
 
 # ------------------------------------------------------------
 # [실습/과제 힌트] 방 최대 인원 제한

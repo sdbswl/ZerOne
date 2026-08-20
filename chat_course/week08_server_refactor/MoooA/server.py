@@ -24,7 +24,7 @@ from repository import InMemoryRoomRepository, FileRoomRepository
 from session import ConnectionManager
 from command import CommandHandler
 
-HOST = "127.0.0.1"
+HOST = "172.16.69.70"
 PORT = 5000
 
 HELP = "명령: /create 방, /join 방, /leave, /rooms, /who, /rename 이름, /w 닉 메시지"
