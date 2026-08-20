@@ -18,13 +18,13 @@ from codec import AesGcmCodec
 from messages import TextMessage, SystemMessage
 from repository import InMemoryRoomRepository, FileRoomRepository
 
-HOST = "127.0.0.1"
+HOST = "172.16.72.217"
 PORT = 5000
 CODEC = AesGcmCodec()   # AES-256-GCM (6주차부터 평문 제거). 클라이언트도 같은 codec/암호여야 통함
 
 # ── 조립(Composition Root): 저장소를 골라 '주입' ──
 #   FileRoomRepository("rooms.json") 로 바꾸면 재시작해도 방이 남는다.
-REPO = InMemoryRoomRepository()
+REPO = FileRoomRepository("rooms.json")
 
 # 접속별 가벼운 정보 (8주차에 Session 객체로 정리 예정)
 nickname_of = {}        # conn -> nickname
@@ -120,7 +120,10 @@ def handle(conn, addr):
             line = reader.readline()
             if not line:
                 break
-            msg = CODEC.decode(line.rstrip("\n"))
+            try:
+                msg = CODEC.decode(line.rstrip("\n"))   # 해독 (다른 키·손상된 줄이면 예외)
+            except Exception:
+                continue                                # 해독 실패한 줄은 무시, 연결은 유지
 
             if isinstance(msg, TextMessage) and msg.text.startswith("/"):
                 handle_command(conn, msg.text)

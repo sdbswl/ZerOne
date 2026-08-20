@@ -17,7 +17,7 @@ import threading
 from messages import TextMessage, EmojiMessage, FileMessage
 from codec import AesGcmCodec
 
-HOST = "127.0.0.1"
+HOST = "172.16.72.217"
 PORT = 5000
 CODEC = AesGcmCodec()   # 서버와 같은 codec/암호(passphrase)여야 서로 알아봄
 
